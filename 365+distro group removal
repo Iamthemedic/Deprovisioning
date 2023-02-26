@@ -1,0 +1,24 @@
+$u= "service account UPN goes here"
+$p= "service account password goes here"
+$SP = ConvertTo-SecureString $p -AsPlainText -Force
+$C = new-object -typename System.Management.Automation.PSCredential -argumentlist $u, $SP
+ 
+Connect-ExchangeOnline -Credential $C -Organization virginpulse.onmicrosoft.com -ShowBanner:$false
+try{
+$DN = Get-User {{A1.SamAccountName}} -ErrorAction stop | select -ExpandProperty DistinguishedName
+ 
+$GL = Get-Recipient -Filter "Members -eq '$DN'" | Select-Object DisplayName,ExternalDirectoryObjectId,RecipientTypeDetails
+ 
+echo "{{A1.SamAccountName}} was a member of:"
+foreach ($G in $GL) {
+    if ($G.RecipientTypeDetails -eq "GroupMailbox") {
+        echo $G.DisplayName "," $G.ExternalDirectoryObjectId
+        Remove-UnifiedGroupLinks -Identity $G.ExternalDirectoryObjectId -Links "$DN" -LinkType Member -Confirm:$false -ErrorAction SilentlyContinue
+    }
+    else {
+        echo $G.DisplayName
+        Remove-DistributionGroupMember -Identity $G.ExternalDirectoryObjectId -Member "$DN" -BypassSecurityGroupManagerCheck -Confirm:$false -ErrorAction SilentlyContinue
+    }
+} }
+catch{
+Write-host $u "didnt have an exchange license so no groups or distros to find or remove"}
