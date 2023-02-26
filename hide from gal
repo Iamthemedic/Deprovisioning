@@ -1,0 +1,11 @@
+$UD="User samaccountname goes here"
+Try{
+$LU = Get-aduser -identity $UD -pr memberof -erroraction stop
+#User found
+Set-ADUser $UD -Add @{msExchHideFromAddressLists="TRUE"}
+}
+#No user
+Catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException] {
+Write-host "$UD not found."
+Break
+}
