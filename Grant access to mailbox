@@ -1,0 +1,17 @@
+## Define Tenant ID
+$tenantID = 'Tenant ID from Azure Goes here'
+## Set the app id 
+$appID = 'Goes here'
+## Set the certificate thumbprint
+$CertificateThumbPrint = 'Goes here'
+#User to change
+$upn='User's UPN goes here'
+ 
+### Connect to Exchange Online ###
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+try{
+Add-MailboxPermission -Identity $upn -User 'Person who receives access email goes here' -AccessRights FullAccess -InheritanceType All
+Disconnect-exchangeonline -Confirm:$false}
+catch{
+Disconnect-exchangeonline -Confirm:$false
+$error[0]}
