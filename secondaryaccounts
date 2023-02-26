@@ -1,0 +1,48 @@
+# Set the password string
+$newPassword = "New password goes here"
+ 
+# Set the OU to move the users to
+$ouDN = "OU=Terminated Users,DC=virginlifecare,DC=com"
+ 
+# Read the user list from a file
+$userlist = @()
+$userList += New-Object psobject -Property @{Type='Awsinsights';Account='awsinsights.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"7",""}}'}
+$userList += New-Object psobject -Property @{Type='Awspr';Account='awspr.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
+$userList += New-Object psobject -Property @{Type='dbadminspa';Account='dbadminspa.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"8",""}}'}
+$userList += New-Object psobject -Property @{Type='dbreadpa';Account='dbreadpa.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"10",""}}'}
+$userList += New-Object psobject -Property @{Type='dbwritepa';Account='dbwritepa.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"9",""}}'}
+$userList += New-Object psobject -Property @{Type='efteu';Account='efteu.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
+$userList += New-Object psobject -Property @{Type='eftpa';Account='eftpa.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
+$userList += New-Object psobject -Property @{Type='eftpa';Account='eftus.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
+$userList += New-Object psobject -Property @{Type='unceu';Account='unceu.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
+ 
+ 
+# Loop through the user list
+foreach ($user in $userList) {
+  try{
+  $UD=get-aduser -identity $user.Account -pr memberof -ErrorAction Stop
+  $USam= $ud.SamAccountName
+ 
+  # Create an empty array to store group membership information
+  $groupMembership = @{}
+  # Disable the user
+  Disable-ADAccount -Identity $ud
+  # Set password
+  Set-ADAccountPassword -Identity $ud -NewPassword (ConvertTo-SecureString -AsPlainText $newPassword -Force)
+  # Move the user to the specified OU
+  Move-ADObject -Identity $ud -TargetPath $ouDN
+ 
+  # Get a list of groups the user is a member of
+  $groups = $ud.memberof
+ 
+    foreach ($group in $groups) {
+    if ($group -NotLike "*Domain Users*") {
+        Remove-ADgroupmember -Identity $group -Members $ud -Confirm:$false
+    }
+}
+ 
+  #Print groups for report
+  Write-host "Group membership for '$usam': $groups"}
+  catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException]{
+    Write-host $user.account" not found"}
+}
