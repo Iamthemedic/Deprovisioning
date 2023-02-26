@@ -1,0 +1,29 @@
+#variable definition
+$departing='departing users email address'
+$receiving='email address of person getting access'
+$AdminSiteURL= "https://virginpulse-admin.sharepoint.com"
+ 
+#user account to make changes with
+$user="service account email"
+$pass= "password"
+$SecurePassword = ConvertTo-SecureString $pass -AsPlainText -Force
+$Cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $user, $SecurePassword
+ 
+#Login to portals
+ 
+Connect-PnPOnline -url $AdminSiteURL -Credential $Cred
+Connect-SPOService -url $AdminSiteURL -Credential $Cred
+try{
+#get URL to user onedrive
+$OneDrive = Get-PnPUserProfileProperty -Account $departing |select-object -ExpandProperty Personalurl
+ 
+#assign Onedrive to recipient
+Set-SPOUser -Site $OneDrive -LoginName $receiving -IsSiteCollectionAdmin $true -ErrorAction Stop|Out-Null
+ 
+#close session
+Echo $onedrive}
+catch{
+$error[0]}
+finally{
+Disconnect-PnPOnline
+Disconnect-SPOService}
