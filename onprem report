@@ -1,0 +1,8 @@
+$user='users samaccountname goes here'
+$groups = Get-ADUser $user -properties memberOf | % {$_.memberOf}
+echo "$user is now a member of the following groups:"
+foreach ($group in $groups) {
+    if ($group -NotLike "*Domain Users*") {
+        echo "$group,"
+    }
+}
