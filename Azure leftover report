@@ -1,0 +1,11 @@
+$UPN=Get-ADuser 'users samaccountname goes here' -pr userprincipalname | select userprincipalname,DN
+$user= 'service account email goes here'
+$pass= 'password goes here'
+$SP = ConvertTo-SecureString $pass -AsPlainText -Force
+$Cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $user, $SP
+$ErrorActionPreference='SilentlyContinue'
+Connect-AzureAD -Credential $Cred|Out-Null
+ 
+$UPNOID = Get-AzureADUser -ObjectId $UPN.userprincipalname | select -expandproperty ObjectID
+$groups=Get-AzureADUserMembership -ObjectId $UPNOID|select objectid,displayname
+echo "Group membership after removing groups for "$upn.userprincipalname $groups
