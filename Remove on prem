@@ -1,0 +1,10 @@
+$user='users samaccountname here'
+$groups = Get-ADUser $user -properties memberOf | % {$_.memberOf}
+#remove them from every group except domain users
+echo "$user was a member of the following groups:"
+foreach ($group in $groups) {
+    if ($group -NotLike "*Domain Users*") {
+    echo "$group"
+        Remove-ADPrincipalGroupMembership -Identity $user -MemberOf $group -Confirm:$false -Server virginlifecare.com
+    }
+}
