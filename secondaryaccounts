@@ -4,7 +4,7 @@ $newPassword = "New password goes here"
 # Set the OU to move the users to
 $ouDN = "OU=Terminated Users,DC=virginlifecare,DC=com"
  
-# Read the user list from a file
+# Read the user list from an array
 $userlist = @()
 $userList += New-Object psobject -Property @{Type='Awsinsights';Account='awsinsights.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"7",""}}'}
 $userList += New-Object psobject -Property @{Type='Awspr';Account='awspr.{{A1.GivenName | slice:"0"}}{{A1.SamAccountName|split:"."|last|truncate:"13",""}}'}
