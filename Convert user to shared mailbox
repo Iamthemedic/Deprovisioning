@@ -1,0 +1,19 @@
+## Define Tenant ID
+$tenantID = 'Tenant ID from Azure Goes here'
+## Set the app id
+$appID = 'goes here'
+## Set the certificate thumbprint
+$CertificateThumbPrint = 'Goes here'
+#User to change
+$upn='User's UPN goes here'
+ 
+### Connect to Exchange Online ###
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+#Change to shared mailbox
+try{
+set-mailbox $upn -type shared -ErrorAction Stop
+Disconnect-exchangeonline -Confirm:$false}
+catch{
+Disconnect-exchangeonline -Confirm:$false
+Write-warning $error[0]
+}
