@@ -1,0 +1,21 @@
+## Define Tenant ID
+$tenantID = 'Tenant ID from Azure Goes here'
+## Set the app id
+$appID = 'Goes here'
+## Set the certificate thumbprint
+$CertificateThumbPrint = 'Goes Here'
+##User to change
+$upn='User's UPN goes here'
+
+
+## The below depends on a certificate existing at the path specified to allow for cert based auth into Exchange-online that is name fs-orch.pfx. Change file nane as needed.
+### Connect to Exchange Online ###
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+#Change to shared mailbox
+try{
+Set-Mailbox $upn -MaxSendSize 1kb -Verbose
+Disconnect-exchangeonline -Confirm:$false}
+catch{
+Disconnect-exchangeonline -Confirm:$false
+Write-Warning $error[0]
+}
