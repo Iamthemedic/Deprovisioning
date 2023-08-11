@@ -5,6 +5,6 @@ echo "$user was a member of the following groups:"
 foreach ($group in $groups) {
     if ($group -NotLike "*Domain Users*") {
     echo "$group"
-        Remove-ADPrincipalGroupMembership -Identity $user -MemberOf $group -Confirm:$false -Server virginlifecare.com
+        Remove-ADPrincipalGroupMembership -Identity $user -MemberOf $group -Confirm:$false -Server Domaingoeshere
     }
 }
