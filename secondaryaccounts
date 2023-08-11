@@ -2,7 +2,7 @@
 $newPassword = "New password goes here"
  
 # Set the OU to move the users to
-$ouDN = "OU=Terminated Users,DC=virginlifecare,DC=com"
+$ouDN = "OU=Terminated Users,DC=domain,DC=com"
  
 # Read the user list from an array
 $userlist = @()
