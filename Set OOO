@@ -9,7 +9,7 @@ $CertificateThumbPrint = 'Goes here'
 $upn='User's UPN goes here'
  
 ### Connect to Exchange Online ###
-Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'domaingoeshere' -ShowBanner:$false
 try{
 Set-MailboxAutoReplyConfiguration -Identity $upn -AutoReplyState Enabled -InternalMessage "Text goes here" -ExternalMessage "Text goes here"
 Disconnect-exchangeonline -Confirm:$false}
