@@ -10,7 +10,7 @@ $upn='User's UPN goes here'
 
 ## The below depends on a certificate existing at the path specified to allow for cert based auth into Exchange-online that is name fs-orch.pfx. Change file nane as needed.
 ### Connect to Exchange Online ###
-Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'domain goes' -ShowBanner:$false
 #Change to shared mailbox
 try{
 Set-Mailbox $upn -MaxSendSize 1kb -Verbose
