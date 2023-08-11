@@ -1,7 +1,7 @@
 #variable definition
 $departing='departing users email address'
 $receiving='email address of person getting access'
-$AdminSiteURL= "https://virginpulse-admin.sharepoint.com"
+$AdminSiteURL= "https://*.sharepoint.com"
  
 #user account to make changes with
 $user="service account email"
