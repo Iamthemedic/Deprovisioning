@@ -6,9 +6,10 @@ $appID = 'goes here'
 $CertificateThumbPrint = 'Goes here'
 #User to change
 $upn='User's UPN goes here'
- 
+#Organization name
+$orgname='Organization name goes here ex: company.onmicrosoft.com'
 ### Connect to Exchange Online ###
-Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization 'virginpulse.onmicrosoft.com' -ShowBanner:$false
+Connect-ExchangeOnline -CertificateFilePath "C:\Certificate\fs-orch.pfx" -CertificatePassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) -AppID $appID -Organization '$orgname' -ShowBanner:$false
 #Change to shared mailbox
 try{
 set-mailbox $upn -type shared -ErrorAction Stop
